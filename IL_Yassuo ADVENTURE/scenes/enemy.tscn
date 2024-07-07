@@ -1,0 +1,77 @@
+[gd_scene load_steps=11 format=3 uid="uid://b88sfbbpobquq"]
+
+[ext_resource type="Script" path="res://script/enemy.gd" id="1_7ss0g"]
+[ext_resource type="Texture2D" uid="uid://eyi63gbdd2bi" path="res://assets/Basic Demon Animations/antlered rascal/AntleredRascal.png" id="1_hgpaw"]
+[ext_resource type="Script" path="res://script/Damageable.gd" id="3_7xys2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wk571"]
+atlas = ExtResource("1_hgpaw")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k2art"]
+atlas = ExtResource("1_hgpaw")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kkvcm"]
+atlas = ExtResource("1_hgpaw")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w6amd"]
+atlas = ExtResource("1_hgpaw")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vpl4k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wk571")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k2art")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kkvcm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w6amd")
+}],
+"loop": true,
+"name": &"walking",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pcb6o"]
+size = Vector2(28, 29)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ni6f2"]
+radius = 121.334
+
+[node name="enemy" type="Node2D"]
+script = ExtResource("1_7ss0g")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(2.875, 2.625)
+sprite_frames = SubResource("SpriteFrames_vpl4k")
+animation = &"walking"
+
+[node name="hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
+position = Vector2(0, 6.5)
+shape = SubResource("RectangleShape2D_pcb6o")
+
+[node name="Damagble" type="Node" parent="hitbox"]
+script = ExtResource("3_7xys2")
+
+[node name="AreaDitection" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaDitection"]
+shape = SubResource("CircleShape2D_ni6f2")
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="hitbox" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="AreaDitection" to="." method="_on_area_ditection_body_entered"]
+[connection signal="body_exited" from="AreaDitection" to="." method="_on_area_ditection_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
